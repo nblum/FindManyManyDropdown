@@ -5,7 +5,11 @@
  * @author colymba
  * @package GridFieldBulkEditingTools
  */
-class FindManyManyDropdown implements GridField_HTMLProvider, GridField_URLHandler {
+//class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionProvider {
+
+class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator {
+		
+	
 		
 	/**
 	 * component configuration
@@ -17,8 +21,6 @@ class FindManyManyDropdown implements GridField_HTMLProvider, GridField_URLHandl
 	 * 
 	 * @var array 
 	 */
-	 
-		
 	/**
 	 *
 	 * @param GridField $gridField
@@ -27,7 +29,7 @@ class FindManyManyDropdown implements GridField_HTMLProvider, GridField_URLHandl
 	public function getHTMLFragments($gridField) {	
 		
 		Requirements::css(FindManyManyDropdown_PATH . '/css/FindManyManyDropdown.css');
-		
+		Requirements::javascript(FindManyManyDropdown_PATH . '/javascript/FindManyManyDropdownForm.js');
 		
 		$targetFragment = 'before';
 		
@@ -39,35 +41,82 @@ class FindManyManyDropdown implements GridField_HTMLProvider, GridField_URLHandl
 		$dataClass = ($gridField->list->dataClass); 
 		
 		 $dropdownOptions = new DropdownField(
-            $dataClass,
+            'gridfield_relationdropdown',
             'Please choose an object',
             Dataobject::get($dataClass)->map("ID", "Title")
         );
-        $dropdownOptions->setEmptyString('Search:');
+        $dropdownOptions->setEmptyString('Select:');
 		
 		
+		
+		
+		$addAction = new GridField_FormAction($gridField, 'gridfield_relationadd',
+			_t('GridField.LinkExisting', "Link Existing"), 'addDDto', 'addDDto');
+		$addAction->setAttribute('data-icon', 'chain--plus');
+		
+		
+		
+		$fieldList = new FieldList($dropdownOptions);
+		
+		
+		$forTemplate = new ArrayData(array());
+		$forTemplate->Fields = new ArrayList();
+		
+		$forTemplate->Fields->push($dropdownOptions);
+//		$forTemplate->Fields->push($findAction);
+		$forTemplate->Fields->push($addAction);
+		
+		/*
 
-		$bulkUploadBtn = new ArrayData(array(
+		$forTemplate = new ArrayData(array(
 			'Name' => 'SomeKindOfName',
-			'DropDownField' => $dropdownOptions
+			'DropDownField' => $dropdownOptions //$fieldList//
 		));
+		*/
+		
+		
 		
 		
 		return array(
-			$targetFragment => $bulkUploadBtn->renderWith('FindManyManyDropdownForm')
+			$targetFragment => $forTemplate->renderWith('FindManyManyDropdownForm')
 		);
+		
+		
+		//return array(
+		//	$targetFragment => $ArrayDataForTemplate->renderWith('FindManyManyDropdownForm')
+		//);
+	}
+	
+	
+	public function getActions($gridField) {
+		return array('addDDto');
+	}
+	
+	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
+
+		if(isset($data['gridfield_relationdropdown']) && $data['gridfield_relationdropdown']){
+			$gridField->State->GridFieldAddRelation = $data['gridfield_relationdropdown'];
+		}
+		$gridField->State->GridFieldSearchRelation = '';
+			
 	}
 	
 	 
 	
-	/**
-	 *
-	 * @param GridField $gridField
-	 * @return array 
-	 */
-	public function getURLHandlers($gridField) {
-			return array();
-	}
 	
+	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
+		if(!$gridField->State->GridFieldAddRelation) {
+			return $dataList;
+		}
+		$objectID = Convert::raw2sql($gridField->State->GridFieldAddRelation);
+		if($objectID) {
+			$object = DataObject::get_by_id($dataList->dataclass(), $objectID);
+			if($object) {
+				$dataList->add($object);
+			}
+		}
+		$gridField->State->GridFieldAddRelation = null;
+		return $dataList;
+	}	
 	
 }
