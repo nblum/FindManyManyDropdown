@@ -1,5 +1,5 @@
 {
-	"name": "jonshutt/FindManyManyDropdown",
+	"name": "jonshutt/find-many-many-dropdown",
 	"type": "silverstripe-module",
 	"description": "Use a drop down list in a many many gridfield to display options instead of searching",
 	"homepage": "http://www.silverstripe-ecommerce.com/",
