@@ -1,0 +1,20 @@
+{
+	"name": "jonshutt/FindManyManyDropdown",
+	"type": "silverstripe-module",
+	"description": "Use a drop down list in a many many gridfield to display options instead of searching",
+	"homepage": "http://www.silverstripe-ecommerce.com/",
+	"keywords": ["gridfield", "many-many", "manymany", "picker", "silverstripe"],
+	"license": "BSD-3-Clause",
+	"authors":[
+		{
+			"name": "Jon Shutt",
+			"homepage": "http://www.futureweb.co.nz",
+			"email" : "sales@futureweb.co.nz",
+			"role" : "developer"
+		}
+	],
+	"require": {
+	    "silverstripe/cms": "~3.0",
+	}
+	
+}
