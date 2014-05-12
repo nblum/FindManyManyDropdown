@@ -1,8 +1,6 @@
 (function($) {	
 	$.entwine('ss', function($) {
-		
-		
-		
+
 		$('.add-existing-dropdown .dropdown').entwine({
 			onmatch: function(e)
 			{ 
@@ -19,15 +17,7 @@
 				}else{
 					addbutton.button('disable');
 				}
-				
 			}
 		});
-		
-		
-		
-		
-		
-		
-		
 	});
 }(jQuery));
