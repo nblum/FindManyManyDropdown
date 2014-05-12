@@ -1,31 +1,14 @@
 <?php
 /**
- * GridField component for uploading images in bulk
+ * GridField component for finding ManyMany items
  *
- * @author colymba
- * @package GridFieldBulkEditingTools
+ * create a dropdown of objects that can be found through a many_many relation
+ * this saves people trying to search as they can clearly see items that can be added
  */
-//class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionProvider {
 
 class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator {
 		
-	
-		
-	/**
-	 * component configuration
-	 * 
-	 * 'fileRelationName' => field name of the $has_one File/Image relation
-	 * 'editableFields' => fields editable on the Model
-	 * 'fieldsClassBlacklist' => field types that will be removed from the automatic form generation
-	 * 'fieldsNameBlacklist' => fields that will be removed from the automatic form generation
-	 * 
-	 * @var array 
-	 */
-	/**
-	 *
-	 * @param GridField $gridField
-	 * @return array 
-	 */
+
 	public function getHTMLFragments($gridField) {	
 		
 		Requirements::css(FindManyManyDropdown_PATH . '/css/FindManyManyDropdown.css');
@@ -47,44 +30,20 @@ class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionPr
         );
         $dropdownOptions->setEmptyString('Select:');
 		
-		
-		
-		
 		$addAction = new GridField_FormAction($gridField, 'gridfield_relationadd',
 			_t('GridField.LinkExisting', "Link Existing"), 'addDDto', 'addDDto');
 		$addAction->setAttribute('data-icon', 'chain--plus');
-		
-		
-		
-		$fieldList = new FieldList($dropdownOptions);
-		
+
 		
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList();
 		
 		$forTemplate->Fields->push($dropdownOptions);
-//		$forTemplate->Fields->push($findAction);
 		$forTemplate->Fields->push($addAction);
-		
-		/*
 
-		$forTemplate = new ArrayData(array(
-			'Name' => 'SomeKindOfName',
-			'DropDownField' => $dropdownOptions //$fieldList//
-		));
-		*/
-		
-		
-		
-		
 		return array(
 			$targetFragment => $forTemplate->renderWith('FindManyManyDropdownForm')
 		);
-		
-		
-		//return array(
-		//	$targetFragment => $ArrayDataForTemplate->renderWith('FindManyManyDropdownForm')
-		//);
 	}
 	
 	
@@ -100,9 +59,7 @@ class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionPr
 		$gridField->State->GridFieldSearchRelation = '';
 			
 	}
-	
-	 
-	
+
 	
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
 		if(!$gridField->State->GridFieldAddRelation) {
