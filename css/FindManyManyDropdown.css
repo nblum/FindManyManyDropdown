@@ -1,3 +1,4 @@
 /* CSS Document */
 
-.add-existing-dropdown .dropdown { width:300px}
+.add-existing-dropdown .dropdown { width:270px}
+.add-existing-dropdown > span { display:inline-block; float:left; }
