@@ -7,37 +7,37 @@
  */
 
 class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator {
-		
 
-	public function getHTMLFragments($gridField) {	
-		
+
+	public function getHTMLFragments($gridField) {
+
 		Requirements::css(FindManyManyDropdown_PATH . '/css/FindManyManyDropdown.css');
 		Requirements::javascript(FindManyManyDropdown_PATH . '/javascript/FindManyManyDropdownForm.js');
-		
+
 		$targetFragment = 'before';
-		
+
 		if ( $gridField->getConfig()->getComponentByType('GridFieldButtonRow') )
 		{
 			$targetFragment = 'buttons-before-right';
 		}
-		
-		$dataClass = ($gridField->list->dataClass); 
-		
+
+		$dataClass = ($gridField->list->dataClass);
+
 		 $dropdownOptions = new DropdownField(
             'gridfield_relationdropdown',
             'Please choose an object',
             Dataobject::get($dataClass)->map("ID", "Title")
         );
         $dropdownOptions->setEmptyString('Select:');
-		
+
 		$addAction = new GridField_FormAction($gridField, 'gridfield_relationadd',
 			_t('GridField.LinkExisting', "Link Existing"), 'addDDto', 'addDDto');
 		$addAction->setAttribute('data-icon', 'chain--plus');
 
-		
+
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList();
-		
+
 		$forTemplate->Fields->push($dropdownOptions);
 		$forTemplate->Fields->push($addAction);
 
@@ -45,22 +45,22 @@ class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionPr
 			$targetFragment => $forTemplate->renderWith('FindManyManyDropdownForm')
 		);
 	}
-	
-	
+
+
 	public function getActions($gridField) {
 		return array('addDDto');
 	}
-	
+
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 
 		if(isset($data['gridfield_relationdropdown']) && $data['gridfield_relationdropdown']){
 			$gridField->State->GridFieldAddRelation = $data['gridfield_relationdropdown'];
 		}
 		$gridField->State->GridFieldSearchRelation = '';
-			
+
 	}
 
-	
+
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
 		if(!$gridField->State->GridFieldAddRelation) {
 			return $dataList;
@@ -74,6 +74,6 @@ class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionPr
 		}
 		$gridField->State->GridFieldAddRelation = null;
 		return $dataList;
-	}	
-	
+	}
+
 }
