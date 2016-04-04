@@ -8,7 +8,6 @@
 
 class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator {
 
-
 	public function getHTMLFragments($gridField) {
 
 		Requirements::css(FindManyManyDropdown_PATH . '/css/FindManyManyDropdown.css');
@@ -24,7 +23,7 @@ class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionPr
 		$dataClass = ($gridField->list->dataClass);
 
 		 $dropdownOptions = new DropdownField(
-            'gridfield_relationdropdown',
+            $this->fieldName($gridField),
             'Please choose an object',
             Dataobject::get($dataClass)->map("ID", "Title")
         );
@@ -53,8 +52,8 @@ class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionPr
 
 	public function handleAction(GridField $gridField, $actionName, $arguments, $data) {
 
-		if(isset($data['gridfield_relationdropdown']) && $data['gridfield_relationdropdown']){
-			$gridField->State->GridFieldAddRelation = $data['gridfield_relationdropdown'];
+		if(isset($data[$this->fieldName($gridField)]) && $data[$this->fieldName($gridField)]){
+			$gridField->State->GridFieldAddRelation = $data[$this->fieldName($gridField)];
 		}
 		$gridField->State->GridFieldSearchRelation = '';
 
@@ -76,4 +75,13 @@ class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionPr
 		return $dataList;
 	}
 
+	/**
+	 * creates a unique form field name for each dropdown
+	 * @param GridField $gridField
+	 * @return string
+	 */
+	protected function fieldName(GridField $gridField)
+	{
+		return 'gridfield_relationdropdown_' . $gridField->getAttribute('name');
+	}
 }
