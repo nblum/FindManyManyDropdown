@@ -8,6 +8,23 @@
 
 class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator {
 
+	/**
+	 * sortBy Field for selection options
+	 * @var string
+	 */
+	protected $sortBy = 'ID';
+
+	/**
+	 * FindManyManyDropdown constructor.
+	 * @param string $sortBy
+	 */
+	public function __construct($sortBy = '')
+	{
+		if(!empty(strval($sortBy))) {
+			$this->sortBy = $sortBy;
+		}
+	}
+
 	public function getHTMLFragments($gridField) {
 
 		Requirements::css(FindManyManyDropdown_PATH . '/css/FindManyManyDropdown.css');
@@ -25,7 +42,7 @@ class FindManyManyDropdown implements GridField_HTMLProvider, GridField_ActionPr
 		 $dropdownOptions = new DropdownField(
             $this->fieldName($gridField),
             'Please choose an object',
-            Dataobject::get($dataClass)->map("ID", "Title")
+            Dataobject::get($dataClass)->sort($this->sortBy)->map("ID", "Title")
         );
         $dropdownOptions->setEmptyString('Select:');
 
