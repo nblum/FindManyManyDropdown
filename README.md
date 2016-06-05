@@ -25,7 +25,6 @@ class Page extends SiteTree {
         $config->removeComponentsByType('GridFieldAddExistingAutocompleter')
         $config->addComponent(new FindManyManyDropdown('Title'));
 
-
         return $fields;
     }
 }
